@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,7 +32,22 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String? status;
 
-  startPayment() {}
+  static const platform = MethodChannel("flutter/native/payment_integration");
+
+  Future<void> startPayment() async {
+    String s;
+    try {
+      final String result = await platform.invokeMethod("getPaymentStatus");
+      s = "Status:$result";
+    } catch (e) {
+      s = "Failed to get Status, Error:$e";
+    }
+
+    setState(() {
+      status = s;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +59,10 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(status??"Status not available",style: const TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+            Text(
+              status ?? "Status not available",
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
             ElevatedButton(
               child: const Text("Start Payment"),
               onPressed: startPayment,
