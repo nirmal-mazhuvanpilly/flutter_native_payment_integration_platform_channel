@@ -21,16 +21,11 @@ public class MainJavaActivity extends FlutterActivity {
 
     private static MethodCall methodCaller = null;
     private static MethodChannel.Result methodResult = null;
-
-    private static final String API_URL = "https://api-staging.tamara.co/";
-    private static final String AUTH_TOKEN =
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhY2NvdW50SWQiOiI0NWQwMzAzOC1kM2I2LTQ1ODctYWY2Ny1hNDNlY2FlYjFiZDMiLCJ0eXBlIjoibWVyY2hhbnQiLCJzYWx0IjoiZjlmNWI3ZjUzMjY3NzM0NWZjNmNmNzk4ZWZlMDRiZGYiLCJpYXQiOjE1OTkzNzQ0MzksImlzcyI6IlRhbWFyYSJ9.OVeDMF5k_JCybrIGSnhscL0AUguCa0ZgUbvz3uyPcbhhXAH9ZDpXYSwtSkWXDuYNLda4_l9YcVg8oPz3RXhSxw348nNtDAbKhsdwPqauI-I_2OXX2ngyBIATdOExvv07TX1xmsyM9ftDFNSfhZ6q8acZy89I3YHUbxWiT-i_5oJsBv0XRCEwUuzoFjN6YW_1Y2lBgLpFP1xeEwFPX3ve9w5GP8j73D1O5UvrHYOoX-mQZ0qVjjDdgv6YL_IxBjBfoI9rLwXzsOpz0F_KtaEoIIqYrOW4k8VEmETyxgxyJ8PrBmqoD31O6Vkvs63nialYRApPcFxAvXyIj3CqnMydzw";
-    private static final String NOTIFICATION_WEB_HOOK_URL = "https://tamara.co/pushnotification";
+    private static final String CHECKOUT_URL = "https://checkout-sandbox.tamara.co/checkout/d7ce1135-73c3-44e2-86ea-d6272d906d79?locale=ar_SA&orderId=fee6933b-26ea-4b8b-b440-f9529787f21c";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        TamaraPayment.Companion.initialize(AUTH_TOKEN, API_URL, NOTIFICATION_WEB_HOOK_URL);
     }
 
     @Override
@@ -46,7 +41,7 @@ public class MainJavaActivity extends FlutterActivity {
                             //now can use methodCaller abd methodResult anywhere within the class
 
                             if (methodCaller.method.equals("getPaymentStatus")) {
-                                startPayment();
+                                TamaraPayment.Companion.startPayment(this,CHECKOUT_URL,"","","");
                             }
                         }
                 );
@@ -72,17 +67,5 @@ public class MainJavaActivity extends FlutterActivity {
                 }
             }
         }
-    }
-
-    public void startPayment() {
-        //Testing
-        TamaraPayment.Companion.createOrder("123", "Shoe");
-        TamaraPayment.Companion.setCustomerInfo("Hi", "Hello", "8129812981", "", true);
-        TamaraPayment.Companion.addItem("shoe", "123", "123", 500, 200, 20, 1);
-        TamaraPayment.Companion.setShippingAddress("", "", "", "", "", "", "", "");
-        TamaraPayment.Companion.setBillingAddress("", "", "", "", "", "", "", "");
-        TamaraPayment.Companion.setShippingAmount(500);
-        TamaraPayment.Companion.setDiscount(20, "discount");
-        TamaraPayment.Companion.startPayment(this);
     }
 }
